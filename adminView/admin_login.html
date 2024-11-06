@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ecf0f1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-form {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .submit-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+        .error {
+            color: red;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-form">
+        <h2>Admin Login</h2>
+        <p class="error" id="error-message" style="display: none;"></p>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="submit-btn">Login</button>
+        </form>
+    </div>
+
+    <script>
+  
+
+        // Handle form submission
+        document.getElementById('login-form').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent default form submission
+            const data = document.getElementById('login-form');
+            const formData = new FormData(data);
+            const jsonData = {};
+            formData.forEach((value, key) => {
+                jsonData[key] = value;
+            });
+            
+            const response = await fetch('http://localhost:8080/admin-login', {
+                method: 'POST',
+                body: JSON.stringify(jsonData),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if(response.ok) {
+                const data = await response.text();
+                sessionStorage.setItem("session", data);
+                window.location.href = '../adminView/admin_panel.html';
+            } else {
+                const data = await response.text();
+
+                document.getElementById('error-message').style.display = 'block';
+                document.getElementById('error-message').innerText = `${data}`;
+            }
+
+        });
+        document.querySelectorAll('.form-group input').forEach(input => {
+            input.addEventListener('input', function() {
+                document.getElementById('error-message').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

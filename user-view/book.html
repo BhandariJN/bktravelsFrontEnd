@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Your Trip - Destination</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 0;
+        }
+
+        header, footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        main {
+            padding: 2rem;
+        }
+
+        h1 {
+            color: #34495e;
+            text-align: center;
+        }
+
+        .booking-form {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 2rem auto;
+        }
+
+        .booking-form h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #34495e;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .submit-btn, .back-btn {
+            display: inline-block;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover, .back-btn:hover {
+            background-color: #219150;
+        }
+
+        .back-btn {
+            background-color: #3498db;
+            margin-bottom: 1rem;
+        }
+
+        .message {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .total-price {
+            font-size: 1.2rem;
+            color: #34495e;
+            text-align: center;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>BK Travel</h1>
+    </header>
+
+    <main>
+        <a href="home.html" class="back-btn">Back</a>
+        <h1>Book Your Trip to <span id="destination-name"></span></h1>
+    
+        <div id="message-container"></div>
+    
+        <div class="booking-form">
+            <h2>Booking Details</h2>
+    
+            <div class="form-group">
+                <label for="available-dates">Select Date</label>
+                <select id="available-dates">
+                    <!-- Dates will be populated here dynamically -->
+                </select>
+            </div>
+    
+            <div class="form-group">
+                <label for="num-travelers">Number of Travelers</label>
+                <input type="number" id="num-travelers" value="1" min="1">
+            </div>
+    
+            <div class="total-price">
+                Total Price: <span id="total-price"></span>
+            </div>
+            <!-- 
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="text" id="phone" name="phone" required>
+                
+            </div>
+            -->
+    
+            <button class="submit-btn" onclick="bookNow()">Confirm Booking</button>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="copyright">
+                &copy; 2023 BK Travel. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const destinationId = urlParams.get('id');
+        
+        // Store destination data globally to access it in other functions
+        let destinationData = null;
+        
+        document.addEventListener('DOMContentLoaded', getDestinationDetails);
+        
+        async function getDestinationDetails() {
+            try {
+                const response = await fetch(`http://localhost:8080/destination/${destinationId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch destination details');
+                }
+                destinationData = await response.json();
+                renderDestinationDetails(destinationData);
+            } catch (error) {
+                alert('Error loading destination details: ' + error.message);
+            }
+        }
+    
+        function renderDestinationDetails(data) {
+            if(!data) {
+                document.getElementById('message-container').innerHTML = `
+                    <div class="message error">Destination not found</div>
+                `;
+                return;
+            }
+            // Set destination name in the header
+            document.getElementById('destination-name').textContent = data.destinationName;
+    
+            // Create destination details section
+            const bookingForm = document.querySelector('.booking-form');
+            
+            // Add destination information
+            const destinationInfo = document.createElement('div');
+            destinationInfo.classList.add('destination-info');
+            
+            // Add destination image
+            const img = document.createElement('img');
+            img.src = data.imageUrl;
+            img.alt = data.destinationName;
+            img.style.width = '100%';
+            img.style.marginBottom = '1rem';
+            
+            // Add destination description
+            const description = document.createElement('p');
+            description.textContent = data.destinationDescription;
+            
+            // Add base price information
+            const basePrice = document.createElement('p');
+            basePrice.textContent = `Base Price per Person: Rs.${data.destinationPrice}`;
+            basePrice.style.fontWeight = 'bold';
+            
+            // Add hidden input for destination price
+            const priceInput = document.createElement('input');
+            priceInput.type = 'hidden';
+            priceInput.id = 'destination-price';
+            priceInput.value = data.destinationPrice;
+            
+            // Append destination information
+            destinationInfo.appendChild(img);
+            destinationInfo.appendChild(description);
+            destinationInfo.appendChild(basePrice);
+            destinationInfo.appendChild(priceInput);
+            
+            // Insert destination info before the booking form
+            bookingForm.insertBefore(destinationInfo, bookingForm.firstChild);
+    
+            // Generate dates for the next 30 days
+            const dateSelect = document.getElementById('available-dates');
+            dateSelect.innerHTML = ''; // Clear existing options
+            
+            const today = new Date();
+    
+            if (data.availability && Array.isArray(data.availability)) {
+                data.availability.forEach(dateString => {
+                    const date = new Date(dateString);
+                    
+                    if (date > today) {
+                        const option = document.createElement('option');
+                        option.value = date.toISOString().split('T')[0];
+                        option.textContent = date.toLocaleDateString();
+                        dateSelect.appendChild(option);
+                    }
+                });
+            }
+    
+            // Set initial total price
+            calculateTotalPrice(data.destinationPrice);
+    
+            // Add event listener for number of travelers
+            document.getElementById('num-travelers').addEventListener('input', () => {
+                calculateTotalPrice(data.destinationPrice);
+            });
+        }
+    
+        function calculateTotalPrice(pricePerTraveler) {
+            const numTravelers = parseInt(document.getElementById('num-travelers').value) || 1;
+            const totalPrice = numTravelers * parseFloat(pricePerTraveler);
+            document.getElementById('total-price').textContent = `Rs.${totalPrice.toFixed(2)}`;
+            return totalPrice;
+        }
+    
+        async function bookNow() {
+            const session = sessionStorage.getItem('session'); 
+            console.log(session);
+                        if (!session) {
+                alert('Please login to book a trip');
+                window.location.href = 'login.html';
+                return;
+            }
+    
+            const selectedDateTime = document.getElementById('available-dates').value;
+            if (!selectedDateTime) {
+                alert('Please select a travel date');
+                return;
+            }
+    
+            const numTravelers = parseInt(document.getElementById('num-travelers').value);
+            if (numTravelers < 1) {
+                alert('Please enter a valid number of travelers');
+                return;
+            }
+    
+            console.log(sessionStorage.getItem('id'));
+            const totalPrice = calculateTotalPrice(destinationData.destinationPrice);
+            
+            const bookingData = {
+                destinationId: destinationId,
+                userName: sessionStorage.getItem('username'),
+                selectedDateTime: selectedDateTime,
+                numberOfTravellers: numTravelers,
+                totalAmount: parseFloat(totalPrice),
+                
+            };
+            console.log(bookingData);
+    
+            try {
+                const response = await fetch('http://localhost:8080/booking', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+
+                    },
+                    body: JSON.stringify(bookingData)
+                });
+    
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Booking failed');
+                }
+    
+                const result = await response.json();
+                alert('Booking successful!');
+                window.location.href = 'viewownbooking.html';
+            } catch (error) {
+                alert('Error making booking: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

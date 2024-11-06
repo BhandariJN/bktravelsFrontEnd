@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BK Travel - Contact Us</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+    --primary-color: #3498db;
+    --secondary-color: #2ecc71;
+    --background-color: #ecf0f1;
+    --text-color: #34495e;
+    --card-background: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header, footer {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1rem 0;
+}
+
+header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+nav, .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+}
+
+nav ul li {
+    margin-left: 2rem;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 300;
+}
+
+main {
+    max-width: 1200px;
+    margin: 6rem auto 2rem;
+    padding: 0 2rem;
+    display: flex;
+    gap: 2rem;
+}
+
+.contact-section, .contact-info {
+    background-color: var(--card-background);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    flex: 1;
+}
+
+.contact-section h2, .contact-info h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.contact-section form {
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-section label, .contact-info p {
+    margin-bottom: 0.5rem;
+}
+
+.contact-section input, .contact-section textarea {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.contact-section button {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    nav, .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    nav ul {
+        margin-top: 1rem;
+    }
+
+    main {
+        flex-direction: column;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>BK Travel</h1>
+            <ul id="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="aboutus.html">About Us</a></li>
+                <li><a href="contactus.html">Contact Us</a></li>
+                <li id="auth-link"></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="contact-section">
+            <div class="message"></div>
+            <h2>Contact Us</h2>
+             
+            <form id="contact-form">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required>
+
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="country">Country:</label>
+                <input type="text" id="country" name="country" required>
+
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+
+                <input type="hidden" name="userId" id="userId">
+
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+
+        <div class="contact-info">
+            <h2>GET IN TOUCH!!</h2>
+            <p>We'd love to hear from you</p>
+            <p>Email: bktravels@gmail.com</p>
+            <p>Contact No: 9876543210</p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2023 BK Travel. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+
+        
+        const session = sessionStorage.getItem('session');
+        // console.log(session);
+       
+            if (!session) {
+                document.getElementById('auth-link').innerHTML = `
+                    <li><a href="login.html">Login/Register</a></li>
+                `;
+            } else {
+                document.getElementById('auth-link').innerHTML = `
+                    <li><a href="viewownbooking.html" class="view-bookings">View Bookings</a></li>
+                    <li><a href="logout.html">Logout</a></li>
+                `;
+            }
+
+
+            document.getElementById('contact-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    if (!session) {
+        alert('Please login to send a message');
+        return;
+    }
+
+    const id = sessionStorage.getItem('id');  // Fetch the userId from session storage
+
+    // Set the userId hidden field in the form
+    document.getElementById('userId').value = id;
+
+    // Use FormData to gather the form inputs
+    const formData = new FormData(event.target);
+    const jsonData = {};
+
+    formData.forEach((value, key) => {
+        jsonData[key] = value;
+    });
+
+    // Optionally, log the JSON data for debugging
+    console.log(jsonData);
+
+    // Send the data to the backend via Fetch API
+    const response = await fetch('http://localhost:8080/contact', {
+        method: 'POST',
+        body: JSON.stringify(jsonData),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (response.ok) {
+        const data = await response.text();
+        console.log(data);
+        document.querySelector(".message").innerHTML = `
+        <p>
+            ${data}
+        </p>
+        `;
+        event.target.reset();  // Reset form after successful submission
+    } else {
+        document.querySelector(".message").innerHTML = `
+            <p>Message Failed to Send</p>
+        `;
+    }
+});
+
+    </script>
+</body>
+</html>

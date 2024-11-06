@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Your Trip - Destination</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 0;
+        }
+
+        header, footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        main {
+            padding: 2rem;
+        }
+
+        h1 {
+            color: #34495e;
+            text-align: center;
+        }
+
+        .booking-form {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 2rem auto;
+        }
+
+        .booking-form h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #34495e;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .submit-btn, .back-btn {
+            display: inline-block;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover, .back-btn:hover {
+            background-color: #219150;
+        }
+
+        .back-btn {
+            background-color: #3498db;
+            margin-bottom: 1rem;
+        }
+
+        .message {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .total-price {
+            font-size: 1.2rem;
+            color: #34495e;
+            text-align: center;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>BK Travel</h1>
+    </header>
+
+    <main>
+        <a href="home.html" class="back-btn">Back</a>
+        <h1>Book Your Trip to <span id="destination-name"></span></h1>
+        
+        <div id="message-container"></div>
+
+        <div class="booking-form">
+            <h2>Booking Details</h2>
+            <form id="booking-form">
+                <div class="form-group">
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" id="start_date" name="start_date" min="" required>
+                </div>
+                <div class="form-group">
+                    <label for="end_date">End Date:</label>
+                    <input type="date" id="end_date" name="end_date" min="" required>
+                </div>
+                <div class="form-group">
+                    <label for="num_travelers">Number of Travelers:</label>
+                    <input type="number" id="num_travelers" name="num_travelers" min="1" required>
+                </div>
+                <div class="total-price" id="total-price">Total Price: $0</div>
+                <button type="submit" class="submit-btn">Book Now</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="copyright">
+                &copy; 2023 BK Travel. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const pricePerTraveler = 100; // Example rate per traveler
+
+        // Check for user session
+        const userID = sessionStorage.getItem('id');
+        if (!userID) {
+            window.location.href = 'login.html';
+        }
+
+        // Set the destination name (assuming 'destination' variable is set)
+        const destination = "Pokhara"; // Replace with dynamic data if needed
+        document.getElementById('destination-name').textContent = destination;
+
+        // Set minimum date for start date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('start_date').min = today;
+
+        // Update minimum end date based on selected start date
+        document.getElementById('start_date').addEventListener('change', function() {
+            document.getElementById('end_date').min = this.value;
+        });
+
+        // Calculate total price
+        document.getElementById('num_travelers').addEventListener('input', calculateTotalPrice);
+
+        function calculateTotalPrice() {
+            const numTravelers = document.getElementById('num_travelers').value || 1;
+            const totalPrice = numTravelers * pricePerTraveler;
+            document.getElementById('total-price').textContent = `Total Price: $${totalPrice}`;
+        }
+
+        // Handle form submission
+        document.getElementById('booking-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const startDate = document.getElementById('start_date').value;
+            const endDate = document.getElementById('end_date').value;
+            const numTravelers = document.getElementById('num_travelers').value;
+
+            if (endDate < startDate) {
+                displayMessage('Error: End date cannot be before start date.', 'error');
+                return;
+            }
+
+            // Simulate booking process
+            displayMessage('Booking successful!', 'success');
+        });
+
+        function displayMessage(message, type) {
+            const messageContainer = document.getElementById('message-container');
+            messageContainer.innerHTML = `<div class="message ${type}">${message}</div>`;
+        }
+    </script>
+</body>
+</html>

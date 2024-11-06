@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BK Travel - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #ecf0f1;
+            --text-color: #34495e;
+            --card-background: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header, footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+        }
+
+        header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav, .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 2rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 300;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: var(--secondary-color);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 6rem auto 2rem;
+            padding: 0 2rem;
+            flex-grow: 1;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+        }
+
+        .destinations {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .card {
+            background-color: var(--card-background);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card h2 {
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .card p {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .book-now {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .book-now:hover {
+            background-color: #27ae60;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            margin-left: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* New styles for View Bookings link */
+        .view-bookings {
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            padding: 5px 10px;
+            background-color: #fff;
+        }
+        
+        .search-input {
+            border: none;
+            outline: none;
+            font-size: 16px;
+            padding: 10px;
+            width: 200px;
+            border-radius: 20px 0 0 20px;
+        }
+        
+        .search-button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 0 20px 20px 0;
+            transition: background-color 0.3s ease;
+        }
+        
+        .search-button:hover {
+            background-color: #45a049;
+        }
+
+        @media (max-width: 1024px) {
+            .destinations {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav, .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 1rem;
+            }
+
+            nav ul li {
+                margin: 0 0.5rem;
+            }
+
+            .destinations {
+                grid-template-columns: 1fr;
+            }
+
+            .social-icons {
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>BK Travel</h1>
+            <ul id="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="aboutus.html">About Us</a></li>
+                <li><a href="contactus.html">Contact Us</a></li>
+                <li id="auth-link"></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search...">
+            <button class="search-button">Search</button>
+        </div>
+        <h1>Popular Destinations</h1>
+        <div class="destinations" id="destinations"></div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="copyright">
+                &copy; 2023 BK Travel. All rights reserved.
+            </div>
+            <div class="social-icons">
+                <a href="https://www.facebook.com/bktravel" target="_blank"><i class="fab fa-facebook"></i></a>
+                <a href="https://www.instagram.com/bktravel" target ="_blank"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simulate session management using localStorage
+        const session = sessionStorage.getItem('session');
+
+        if (!session) {
+            document.getElementById('auth-link').innerHTML = `
+                <li><a href="login.html">Login/Register</a></li>
+            `;
+        } else {
+            document.getElementById('auth-link').innerHTML = `
+                <li><a href="viewownbooking.html" class="view-bookings">View Bookings</a></li>
+                <li><a href="logout.html">Logout</a></li>
+            `;
+        }
+
+        document.addEventListener('DOMContentLoaded', getDestinations);
+
+        // Function to fetch and display all destinations on initial load
+        async function getDestinations() {
+            const response = await fetch('http://localhost:8080/destination');
+            if (!response.ok) {
+                alert('Network error occurred. Try again later.');
+                return;
+            }
+            const data = await response.json();
+            renderDestinations(data);
+        }
+
+        // Function to render destinations in the DOM
+        function renderDestinations(data) {
+            const destinationsContainer = document.getElementById('destinations');
+            destinationsContainer.innerHTML = ''; // Clear previous results
+
+            if (data.length === 0) {
+                destinationsContainer.innerHTML = '<p>No destinations found</p>';
+                return;
+            }
+
+            data.forEach(element => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+
+                const img = document.createElement('img');
+                img.src = element.imageUrl; // Assume imageUrl is part of your element
+                img.alt = element.destinationName;
+
+                const cardContent = document.createElement('div');
+                cardContent.classList.add('card-content');
+
+                const h2 = document.createElement('h2');
+                h2.textContent = element.destinationName;
+
+                const p = document.createElement('p');
+                p.textContent = element.destinationDescription;
+
+                const p1 = document.createElement('p');
+                p1.textContent = `Price: ${element.destinationPrice}`;
+
+                const bookNow = document.createElement('a');
+                bookNow.href = `book.html?id=${element.id}`;
+                bookNow.classList.add('book-now');
+                bookNow.textContent = 'Book Now';
+
+                cardContent.appendChild(h2);
+                cardContent.appendChild(p);
+                cardContent.appendChild(p1);
+                cardContent.appendChild(bookNow);
+
+                card.appendChild(img);
+                card.appendChild(cardContent);
+
+                destinationsContainer.appendChild(card);
+            });
+        }
+
+        // Add search functionality
+        document.querySelector('.search-button').addEventListener('click', async function() {
+            const searchInput = document.querySelector('.search-input').value.trim();
+            if (searchInput === '') {
+                // If search input is empty, reload all destinations
+                getDestinations();
+                return;
+            }
+            const response = await fetch(`http://localhost:8080/destination/search?query=${searchInput}`);
+            const data = await response.json();
+            renderDestinations(data);
+        });
+    </script>
+</body>
+</html>

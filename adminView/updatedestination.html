@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update Destination</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+    <style>
+        /* Styling */
+        body {
+            font-family: "Poppins", sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="file"],
+        input[type="datetime-local"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #5cb85c;
+            color: #fff;
+            padding: 10px 20px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #4cae4c;
+        }
+        .btn-secondary {
+            background-color: #f0ad4e;
+        }
+        .btn-secondary:hover {
+            background-color: #ec971f;
+        }
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .availability-field {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+        .remove-btn {
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .remove-btn:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="viewdestinations.html" class="btn btn-secondary">Back to Destinations</a>
+        <h1>Update Destination</h1>
+        <form id="destination-form" enctype="multipart/form-data">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="destinationName" required />
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="destinationDescription" required></textarea>
+
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="destinationPrice" required />
+
+            <label for="image">Image URL:</label>
+            <input type="text" id="image" name="imageUrl" required />
+
+            <!-- Availability section -->
+            <label for="availability">Availability:</label>
+            <div id="availability-container">
+                <!-- Availability fields will be added here -->
+            </div>
+            <button type="button" onclick="addAvailabilityField()">Add Another Date</button>
+
+            <input type="submit" value="Update Destination" class="btn" />
+        </form>
+        <p class="error" id="error-message" style="display: none"></p>
+    </div>
+
+    <script>
+        const isSession = sessionStorage.getItem("session");
+        const destinationId = new URLSearchParams(window.location.search).get("id");
+        console.log(destinationId);
+
+        if (!isSession) {
+            alert("You are not logged in as an admin. Redirecting to login page.");
+            window.location.href = "admin_login.html";
+        }
+
+        // Load existing destination data
+        async function loadDestinationData() {
+            try {
+                const response = await fetch(`http://localhost:8080/destination/${destinationId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById("name").value = data.destinationName;
+                    document.getElementById("description").value = data.destinationDescription;
+                    document.getElementById("price").value = data.destinationPrice;
+                    document.getElementById("image").value = data.imageUrl;
+
+                    // Populate availability dates
+                    const container = document.getElementById("availability-container");
+                    container.innerHTML = ""; // Clear default input
+                    data.availability.forEach(date => addAvailabilityField(new Date(date).toISOString().slice(0, -1)));
+                } else {
+                    alert("Failed to fetch destination data.");
+                }
+            } catch (error) {
+                console.error("Error loading destination data:", error);
+            }
+        }
+        loadDestinationData();
+
+        // Add new availability input field
+        function addAvailabilityField(value = "") {
+            const container = document.getElementById("availability-container");
+            const fieldContainer = document.createElement("div");
+            fieldContainer.className = "availability-field";
+
+            const newField = document.createElement("input");
+            newField.type = "datetime-local";
+            newField.name = "availability";
+            newField.value = value;
+            newField.required = true;
+
+            const removeButton = document.createElement("button");
+            removeButton.type = "button";
+            removeButton.className = "remove-btn";
+            removeButton.textContent = "Remove";
+            removeButton.onclick = () => container.removeChild(fieldContainer);
+
+            fieldContainer.appendChild(newField);
+            fieldContainer.appendChild(removeButton);
+            container.appendChild(fieldContainer);
+        }
+
+        // Handle form submission for update
+        document.getElementById("destination-form").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+
+             // Collect all availability fields into an array and append them to formData
+    const availability = Array.from(document.getElementsByName("availability")).map(input => input.value);
+
+// Append each availability date to formData
+availability.forEach(date => formData.append("availability", date));
+
+            try {
+                const response = await fetch(`http://localhost:8080/destination/${destinationId}`, {
+                    method: "PUT",
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    alert("Destination updated successfully!");
+                    window.location.href = "viewdestinations.html";
+                } else {
+                    const error = await response.json();
+                    alert(`Failed to update destination: ${error.message}`);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred while submitting the form.");
+            }
+        });
+    </script>
+</body>
+</html>

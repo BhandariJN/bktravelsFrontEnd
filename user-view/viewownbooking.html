@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BK Travel - Your Bookings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #ecf0f1;
+            --text-color: #34495e;
+            --card-background: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header, footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+        }
+
+        header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav, .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 2rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 300;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: var(--secondary-color);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 6rem auto 2rem;
+            padding: 0 2rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+        }
+
+        .bookings-section {
+            background-color: var(--card-background);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .bookings-section table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .bookings-section th, .bookings-section td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .bookings-section th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+
+        .bookings-section tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .bookings-section tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .no-bookings {
+            color: #666;
+            font-style: italic;
+            text-align: center;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            padding: 5px 10px;
+            background-color: #fff;
+        }
+        
+        .search-input {
+            border: none;
+            outline: none;
+            font-size: 16px;
+            padding: 10px;
+            width: 200px;
+            border-radius: 20px 0 0 20px;
+        }
+        
+        .search-button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 0 20px 20px 0;
+            transition: background-color 0.3s ease;
+        }
+        
+        .search-button:hover {
+            background-color: #45a049;
+        }
+
+        @media (max-width: 768px) {
+            nav, .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 1rem;
+            }
+
+            nav ul li {
+                margin: 0 0.5rem;
+            }
+        }
+
+        button[type="onClick"]:hover {
+    background-color: #2980b9;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>BK Travel</h1>
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="aboutus.html">About Us</a></li>
+                <li><a href="contactus.html">Contact Us</a></li>
+                <li><a href="viewownbooking.html " class="view-bookings">View Bookings</a></li>
+                <li id="auth-link"></li>
+
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="bookings-section">
+            <h1>Your Bookings</h1>
+            <table id="bookings-table">
+                <tr>
+                    <th>Destination</th>
+                    <th>Travel Date</th>
+                    <th>Number of People</th>
+                    <th>Total Price</th>
+                    <th>Payment Status</th>
+                    <th>Action</th>
+                    
+                </tr>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="copyright">
+                &copy; 2023 BK Travel. All rights reserved.
+            </div>
+            <div class="social-icons">
+                <a href="https://www.facebook.com/bktravel" target="_blank"><i class="fab fa-facebook"></i></a>
+                <a href="https://www.instagram.com/bktravel" target="_blank"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        window.onload= function () {
+        const session = sessionStorage.getItem('session');
+            if(!session){
+            alert("Please login to first to see Bookings. Redirecting to login page...");
+            setInterval(function(){
+                window.location.href = "login.html";
+            }, 3000);        }
+        }
+        document.getElementById('auth-link').innerHTML = `<a href="logout.html">Logout</a>`;
+        // Simulate user session and bookings using localStorage
+        document.addEventListener("DOMContentLoaded", getAllBooking)
+        
+      
+        async function getAllBooking() {
+            const username = sessionStorage.getItem('username');
+            
+            console.log(username);
+    const response = await fetch(`http://localhost:8080/booking/${username}`); // corrected 'username' to 'id'
+    const data = await response.json();
+
+    // Check if there are no bookings
+    if (data.length === 0) {
+        document.getElementById('bookings-table').innerHTML = `<tr><td colspan="6">No bookings available</td></tr>`;
+        return;
+    }
+
+    const bookingsTable = document.getElementById('bookings-table');
+   // bookingsTable.innerHTML = ''; // Clear the table before adding new rows
+
+    // Populate the bookings table
+    data.forEach((booking) => {
+        bookingsTable.innerHTML += `
+            <tr>
+                <td>${booking.destinationName}</td>
+                <td>${booking.selectedDate}</td>
+                <td>${booking.numberOfTravellers}</td>
+                <td>Rs ${booking.totalAmount}</td>
+                <td>${booking.status}</td>
+                <td>
+                    ${booking.status === "PENDING" 
+                        ? `<button onclick='pay(${booking.id})'>Pay</button>` 
+                        : booking.status}
+                        ${booking.status === "PENDING"? `<button onclick='cancel(${booking.id})'>Cancel</button>` : ''}
+                </td>
+            </tr>
+        `;
+    });
+}
+async function pay(id) {
+    const response = await fetch(`http://localhost:8080/booking/${id}/pay`);
+    if (response.ok) {
+        const paymentDetails = await response.json();
+        console.log(paymentDetails);
+        submitEsewaForm(paymentDetails);
+       
+    } else {
+        alert('Failed to initiate payment. Please try again.');
+    }
+}
+
+function submitEsewaForm(paymentDetails) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = 'https://rc-epay.esewa.com.np/api/epay/main/v2/form';
+
+    const fields = [
+        'amount', 'tax_amount', 'total_amount', 'transaction_uuid',
+        'product_code', 'product_service_charge', 'product_delivery_charge',
+        'success_url', 'failure_url', 'signed_field_names', 'signature'
+    ];
+
+    fields.forEach(field => {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = field;
+        input.value = paymentDetails[field];
+        form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+  
+    form.submit();
+
+    
+
+}
+
+async function cancel(id) {
+    const response = await fetch(`http://localhost:8080/booking/${id}/cancel`);
+    if (response.ok) {
+        alert('Booking cancelled successfully');
+        window.location.reload();
+    } else {
+        alert('Failed to cancel booking. Please try again.');
+    }
+}
+
+
+
+
+
+    </script>
+</body>
+</html>
+<!-- 
+### Explanation:
+1. **HTML Structure**: The HTML contains a simple layout with a title, a navigation menu, a bookings section, and a footer.
+2. **CSS Styles**: Basic styles are applied to center the content and style the navigation menu, bookings section, and footer.
+3. **JavaScript Functionality**:
+   - The user bookings are simulated using `localStorage`.
+   - If bookings exist, they are parsed from JSON and appended to the bookings table.
+   - If no bookings exist, a "no bookings" message is displayed.
+
+This implementation provides a client-side version of the user bookings page, simulating the user session and bookings using `localStorage`.
+ -->
