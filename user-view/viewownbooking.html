@@ -239,7 +239,7 @@
             }, 3000);        }
         }
         document.getElementById('auth-link').innerHTML = `<a href="logout.html">Logout</a>`;
-        // Simulate user session and bookings using localStorage
+      
         document.addEventListener("DOMContentLoaded", getAllBooking)
         
       
@@ -247,7 +247,7 @@
             const username = sessionStorage.getItem('username');
             
             console.log(username);
-    const response = await fetch(`http://localhost:8080/booking/${username}`); // corrected 'username' to 'id'
+    const response = await fetch(`http://localhost:8080/booking/${username}`);  
     const data = await response.json();
 
     // Check if there are no bookings
@@ -257,9 +257,7 @@
     }
 
     const bookingsTable = document.getElementById('bookings-table');
-   // bookingsTable.innerHTML = ''; // Clear the table before adding new rows
-
-    // Populate the bookings table
+   
     data.forEach((booking) => {
         bookingsTable.innerHTML += `
             <tr>
@@ -303,7 +301,7 @@ function submitEsewaForm(paymentDetails) {
 
     fields.forEach(field => {
         const input = document.createElement('input');
-        input.type = 'text';
+        input.type = 'hidden';
         input.name = field;
         input.value = paymentDetails[field];
         form.appendChild(input);
@@ -334,14 +332,4 @@ async function cancel(id) {
     </script>
 </body>
 </html>
-<!-- 
-### Explanation:
-1. **HTML Structure**: The HTML contains a simple layout with a title, a navigation menu, a bookings section, and a footer.
-2. **CSS Styles**: Basic styles are applied to center the content and style the navigation menu, bookings section, and footer.
-3. **JavaScript Functionality**:
-   - The user bookings are simulated using `localStorage`.
-   - If bookings exist, they are parsed from JSON and appended to the bookings table.
-   - If no bookings exist, a "no bookings" message is displayed.
-
-This implementation provides a client-side version of the user bookings page, simulating the user session and bookings using `localStorage`.
- -->
+ 

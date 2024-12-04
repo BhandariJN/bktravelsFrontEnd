@@ -207,7 +207,14 @@ button[type="submit"]:hover {
                     sessionStorage.setItem('username', data.username);
                     sessionStorage.setItem('session', data.session);
                     sessionStorage.setItem('id', data.id);
-                    alert('You are Logged in Successfully');
+                    //form reset
+                    form.reset();
+                    document.getElementById('error-message').style.display = 'block';
+                    document.getElementById('error-message').style.color = 'green';
+                    document.getElementById('error-message').textContent = 'You are Logged in Successfully';
+
+                    
+                   // alert('You are Logged in Successfully');
                     setTimeout(() => {
                         window.location.href = 'home.html';
                     }, 1000);
